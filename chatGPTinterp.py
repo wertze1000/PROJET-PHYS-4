@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from lenardJones import lennardJones
+from lennardJones import lennardJones
 
 def piecewise_approximation(f, x_range, num_pieces):
     x_min, x_max = x_range
@@ -26,7 +26,7 @@ x, y, approx_y = piecewise_approximation(f, x_range, num_pieces)
 
 plt.plot(x, y, label='true function')
 plt.plot(x, approx_y, label=f'{num_pieces} piece approximation')
-plt.ylim(bottom = -1, top = 1)
-plt.xlim(left = 0, right = 2)
+plt.ylim(bottom = -0.75, top = 0.75)
+plt.xlim(left = 0, right = 1.3)
 plt.legend()
 plt.show()
