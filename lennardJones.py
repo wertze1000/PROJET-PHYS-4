@@ -39,18 +39,21 @@ def approximation(f, xRange, nWells):
                         else :
                                 well.append(wellMinVal)
         return well
-approx = approximation(lennardJones, x, 10)
+approx1 = approximation(lennardJones, x, 1)
+approx2 = approximation(lennardJones, x, 10)
 #print(approx)
 
-plt.plot(x, y)
-plt.plot(x, approx)
+plt.plot(x, y, color = "green",label = "Potentiel de Lennard-Jones")
+plt.plot(x, approx1, color = "blue", linestyle = "dotted", label = "ordre 1")
+plt.plot(x, approx2, color = "red", linestyle = "dashed", label = "ordre 10")
 #plt.plot(x, derivative(lennardJones,x))
 plt.axhline(y = 0, color = 'black')
 
+plt.legend()
 plt.ylabel("V(r) [eV]")
 plt.xlabel("r [nm]")
-plt.ylim(top = 2, bottom = -1)
-plt.xlim(left = 0, right = 2)
+plt.ylim(top = 1.5, bottom = -1)
+plt.xlim(left = 0.1, right = 1.5)
 plt.show()
 
 #poubelle
