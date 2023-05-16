@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 15 17:21:00 2023
-
-@author: User
-"""
 import numpy as np
 import math
 
 from lennardJones import lennardJones
-
+from scipy.signal import argrelextrema
 import scipy.constants as cst
 
 def piecewise_approximation(f, x_range, num_pieces):
@@ -25,15 +19,8 @@ def piecewise_approximation(f, x_range, num_pieces):
         indices = np.where((x >= x_min + i*piece_width) & (x <= x_min + (i+1)*piece_width))
         approx_y[indices] = approx_y_piece
     return x, y, approx_y
-
-m=cst.electron_mass
-f = lambda x: lennardJones(x)
-x_range = (0.01, 1.3)
-num_pieces = 4
-x, y, approx_y = piecewise_approximation(f, x_range, num_pieces)
-
-
 def k(E, approx_y):
+    m=cst.electron_mass
     E0 = np.array([])
     kcar = np.array([], dtype=complex)
     b = np.array([])#position changement
@@ -53,8 +40,8 @@ def k(E, approx_y):
 def Mx(k, b):
     M = np.array([[math.exp(k*b), math.exp(-k*b)],[k*math.exp(k*b), -k*math.exp(k*b)]], dtype = complex)
     return M
-def M(n, E):
-    f = lambda x: lennardJones(x)
+def M(n, E, Eo, sigma):
+    f = lambda x: lennardJones(x, Eo, sigma)
     x_range = (0.01, 1.3)
     x, y, approx_y = piecewise_approximation(f, x_range, n)
     K, c = k(E, approx_y)
@@ -65,4 +52,34 @@ def M(n, E):
             M = Mi
         else:
             M = np.linalg.inv(Mi)*M
-    return M   
+    return M
+
+Etest = np.linspace(0, 1e-15, 100000)
+def nbener(n, Eo, sigma):
+    s = 0
+    Mt = np.array([])
+    for e in Etest:
+        Mt = np.append(Mt, M(n, e, Eo, sigma)[0][0])
+    e = Mt[argrelextrema(Mt, np.less)[0]]
+    s = len(e)
+    return s, e
+def q3():
+    n=1
+    Eo = 0.45
+    sigma = 0.45
+    return nbener(n, Eo, sigma)
+def q4():
+    n = 1
+    sigma = np.arrange(0.1, 1, 0.05)
+    E0 = np.arrage(1, 10, 0.5)
+    soln = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
+    sole = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
+    a=b=0
+    for i in sigma:
+        for j in E0:
+            s, e = nbener(n, i, j) #plus bas e
+            soln[b] [a] = s
+            sole[b] [a] = np.min(e)
+            a+=1
+        b+=1         
+    #reponse sous plot(brouillon), heat map une n et autre e
