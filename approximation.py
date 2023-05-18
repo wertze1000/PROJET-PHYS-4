@@ -1,14 +1,5 @@
 import scipy.integrate as integrate
 import numpy as np
-import matplotlib.pyplot as plt
-
-#PARAMETERS
-Eo = 0.45
-sigma = 0.45
-
-def lennardJones(r, Eo, sigma):
-        lj = (4*Eo*((sigma/r)**12 - (sigma/r)**6))
-        return lj 
 
 def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     nWells+=1
@@ -74,28 +65,5 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     #reverse the initial offset
     return approx - np.abs(functionMinimum)
 
-#EXECUTION
-x_min, x_max = (0.4, 1.25)
-x = np.linspace(x_min, x_max, 1000)
-y = lennardJones(x, Eo, sigma)
 
-#PLOT
-plt.plot(x, y, color = "green",label = "Potentiel de Lennard-Jones")
-plt.plot(x, approx(lennardJones, x_min, x_max, 1, Eo, sigma), color = "blue", linestyle = "dotted", label = "ordre 1")
-plt.plot(x, approx(lennardJones, x_min, x_max, 10, Eo, sigma), color = "red", linestyle = "dashed", label = "ordre 10")
 
-plt.axhline(y = 0, color = 'black')
-
-plt.legend()
-plt.ylabel("V(r) [eV]")
-plt.xlabel("r [nm]")
-plt.ylim(top = 1.5, bottom = -1)
-plt.xlim(left = 0.1, right = 1.5)
-plt.show()
-
-plt.legend()
-plt.ylabel("V(r) [eV]")
-plt.xlabel("r [nm]")
-plt.ylim(top = 1.5, bottom = -1)
-plt.xlim(left = 0.1, right = 1.5)
-plt.show()
