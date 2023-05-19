@@ -5,6 +5,8 @@ from approximation import approx
 from lennardJones import lennardJones
 from scipy.signal import argrelextrema
 import scipy.constants as cst
+import cmath
+import matplotlib.pyplot as plt
 
 #Retourne le K**2 associé à chaque puits, et une matrice B contenant sa position (x)
 def kVal(E, approx_y, x):
@@ -24,29 +26,29 @@ def kVal(E, approx_y, x):
         if approx_y[i] != approx_y[i+1]:
             E0 = np.append(E0, approx_y[i+1])
             
-            print(111, E0, approx_y[i+1])
+            #print(111, E0, approx_y[i+1])
             
-            kCurrent = (2*m*(E - E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
+            kCurrent = (2*m*(E + E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
 
     return kSquared, B
 
-def Mx(k, b):
-    print(k, b)
-    
-    M = np.array([[math.exp(k*b), math.exp(-k*b)],[k*math.exp(k*b), -k*math.exp(k*b)]], dtype = complex)
+def Mx(k_square, b):# calcul de une matrice i, avec un K donnée
+    k = np.sqrt(k_square)
+    #print(k, b)
+    M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(k*b)]], dtype = complex)
     return M
 
-def M(n, E, Eo, sigma):
+def M(n, E, Eo, sigma):#calcule de la matrice M finale
     x_min, x_max = (0.4, 1.25)
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, 1, Eo, sigma)
     K, c = kVal(E, approx_y, x)
     M = np.zeros((2,2))
     
-    print(K, c, n)
+    #print(K, c, n)
     
     for i in range(n):
         Mi = Mx(K[n-i-1], c[n-i-1])
@@ -59,24 +61,27 @@ def M(n, E, Eo, sigma):
     return M, k1, x[0]
 
 
-def nbener(n, Eo, sigma):
-    Etest = np.linspace(-Eo, 0, 1000)
+def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de ceux-ci
+    Etest = np.linspace(-Eo, -9.622682486485401e-23, 1000)
     s = 0
-    Mt = np.array([])
+    Mt = np.array([], dtype= complex)
     
     for e in Etest:
+        print(e)
         m, k1, a = M(n, e, Eo, sigma)
-        Mt = np.append(Mt, m[0][0]-m[0][1]*(1/math.tan(k1*a)))
+        Mt = np.append(Mt, m[0][0]-m[0][1]*(1/cmath.tan(k1*a))) #critere de continuité
     
-    e = Mt[argrelextrema(Mt, np.less)[0]]
+    e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
+    plt.plot(Etest, Mt)
+    plt.show()
     
     return s, e
 
 def q3():
     n = 1
-    Eo = 0.45*1.602176565**(-19)
-    sigma = 0.45**(-9)
+    Eo = 0.6*cst.e#passagen en joule
+    sigma = 0.45*10**(-9)
     
     return nbener(n, Eo, sigma)
 
@@ -84,6 +89,8 @@ def q4():
     n = 1
     sigma = np.arange(0.1, 1.05, 0.05)
     E0 = np.arange(1, 10.5, 0.5)
+    sigma = sigma*10**(-9)
+    E0 = E0*cst.e
     soln = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
     sole = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
     a = b = 0
@@ -98,4 +105,4 @@ def q4():
     
     #reponse sous plot(brouillon), heat map une n et autre e
     
-q3()
+print(q3())
