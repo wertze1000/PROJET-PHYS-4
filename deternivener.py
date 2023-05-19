@@ -1,5 +1,4 @@
 import numpy as np
-import math
 
 from approximation import approx
 from lennardJones import lennardJones
@@ -28,7 +27,7 @@ def kVal(E, approx_y, x):
             
             #print(111, E0, approx_y[i+1])
             
-            kCurrent = (2*m*(E + E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
+            kCurrent = (2*m*(E - E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
@@ -37,7 +36,7 @@ def kVal(E, approx_y, x):
 
 def Mx(k_square, b):# calcul de une matrice i, avec un K donnée
     k = np.sqrt(k_square)
-    #print(k, b)
+    b= b*10**(-9)
     M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(k*b)]], dtype = complex)
     return M
 
@@ -65,12 +64,12 @@ def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de c
     Etest = np.linspace(-Eo, -9.622682486485401e-23, 1000)
     s = 0
     Mt = np.array([], dtype= complex)
-    
+    i=0
     for e in Etest:
-        print(e)
+        print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        Mt = np.append(Mt, m[0][0]-m[0][1]*(1/cmath.tan(k1*a))) #critere de continuité
-    
+        Mt = np.append(Mt, m[0][0]) #critere de continuité
+        i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
     plt.plot(Etest, Mt)
@@ -80,17 +79,17 @@ def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de c
 
 def q3():
     n = 1
-    Eo = 0.6*cst.e#passagen en joule
-    sigma = 0.45*10**(-9)
+    Eo = 7*cst.e#passage en joule
+    sigma = 0.5*10**(-9)#ppassage en mettre
     
     return nbener(n, Eo, sigma)
 
 def q4():
     n = 1
-    sigma = np.arange(0.1, 1.05, 0.05)
-    E0 = np.arange(1, 10.5, 0.5)
-    sigma = sigma*10**(-9)
-    E0 = E0*cst.e
+    sigma = np.arange(0.1, 1.05, 0.05)#en nm
+    E0 = np.arange(1, 10.5, 0.5)#en ev
+    sigma = sigma*10**(-9)#en m
+    E0 = E0*cst.e#en j
     soln = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
     sole = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
     a = b = 0
