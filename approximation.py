@@ -2,7 +2,7 @@ import scipy.integrate as integrate
 import numpy as np
 
 def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
-    nWells+=1
+    nWells += 1
     xSpace = np.linspace(xmin, xmax, 1000, retstep=True)    #Set of points whithin which the function should be welled, with a set precision
     step = xSpace[1]                                        #linspace gives the step thanks to the retstep argument
     functionMinimum = min(arbitraryFunction(xSpace[0], Eo, sigma))     #The minimum of the function within the desired space
