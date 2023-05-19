@@ -4,8 +4,9 @@ from lennardJones import lennardJones
 from approximation import approx
 
 #PARAMETERS
-Eo = 0.45
-sigma = 0.45
+n = 1
+Eo = 0.45*1.602176565**(-19)
+sigma = 0.45*10**(-9)
 
 #EXECUTION
 x_min, x_max = (0.4, 1.25)
@@ -22,6 +23,5 @@ plt.axhline(y = 0, color = 'black')
 plt.legend()
 plt.ylabel("V(r) [eV]")
 plt.xlabel("r [nm]")
-plt.ylim(top = 1.5, bottom = -1)
-plt.xlim(left = 0.1, right = 1.5)
+
 plt.show()
