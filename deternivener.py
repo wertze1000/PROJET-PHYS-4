@@ -34,7 +34,7 @@ def kVal(E, approx_y, x):
 
     return kSquared, B
 
-def Mx(k_square, b):# calcul de une matrice i, avec un K donnée
+def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
     k = np.sqrt(k_square)
     b= b*10**(-9)
     M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(k*b)]], dtype = complex)
@@ -61,14 +61,14 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de ceux-ci
-    Etest = np.linspace(-Eo, -9.622682486485401e-23, 1000)
+    Etest = np.linspace(-Eo, -9.622682486485401e-23, 100)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        Mt = np.append(Mt, m[0][0]) #critere de continuité
+        Mt = (np.append(Mt, m[0][0]+m[0][1])) #critere de continuité
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
@@ -79,8 +79,8 @@ def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de c
 
 def q3():
     n = 1
-    Eo = 7*cst.e#passage en joule
-    sigma = 0.5*10**(-9)#ppassage en mettre
+    Eo = 3*cst.e#passage en joule
+    sigma = 1*10**(-9)#passage en mettre
     
     return nbener(n, Eo, sigma)
 
