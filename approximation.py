@@ -66,4 +66,3 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     return approx - np.abs(functionMinimum)
 
 
-

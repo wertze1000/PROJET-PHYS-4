@@ -21,17 +21,12 @@ def kVal(E, approx_y, x):
     j = 1                                       #Nombre du puits (ou nombre du E0)
     
     for i in range(len(approx_y) - 1):
-
         if approx_y[i] != approx_y[i+1]:
-            E0 = np.append(E0, approx_y[i+1])
-            
-            #print(111, E0, approx_y[i+1])
-            
+            E0 = np.append(E0, approx_y[i+1])                        
             kCurrent = (2*m*(E - E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
-
     return kSquared, B
 
 def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
@@ -43,12 +38,10 @@ def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
 def M(n, E, Eo, sigma):#calcule de la matrice M finale
     x_min, x_max = (0.4, 1.25)
     x = np.linspace(x_min, x_max, 1000)
-    approx_y = approx(lennardJones, x_min, x_max, 1, Eo, sigma)
+    approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, c = kVal(E, approx_y, x)
     M = np.zeros((2,2))
-    
-    #print(K, c, n)
-    
+        
     for i in range(n):
         Mi = Mx(K[n-i-1], c[n-i-1])
         if (i == 0):
@@ -61,26 +54,26 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de ceux-ci
-    Etest = np.linspace(-Eo, -9.622682486485401e-23, 100)
+    Etest = np.linspace(-Eo, 0, 1000)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        Mt = (np.append(Mt, m[0][0]+m[0][1])) #critere de continuité
+        Mt = (np.append(Mt, m[0][0]+m[0][1])/(1)) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
     plt.plot(Etest, Mt)
     plt.show()
     
-    return s, e
+    return s, (e/cst.e)
 
 def q3():
     n = 1
-    Eo = 3*cst.e#passage en joule
-    sigma = 1*10**(-9)#passage en mettre
+    Eo = 7*cst.e#passage en joule
+    sigma = 0.7*10**(-9)#passage en mettre
     
     return nbener(n, Eo, sigma)
 
