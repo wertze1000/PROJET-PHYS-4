@@ -22,7 +22,7 @@ def kVal(E, approx_y, x):
     
     for i in range(len(approx_y) - 1):
         if approx_y[i] != approx_y[i+1]:
-            E0 = np.append(E0, approx_y[i+1])                        
+            E0 = np.append(E0, approx_y[i+1])              
             kCurrent = (2*m*(E - E0[j-1])) / (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
@@ -31,7 +31,6 @@ def kVal(E, approx_y, x):
 
 def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
     k = np.sqrt(k_square)
-    b= b*10**(-9)
     M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(k*b)]], dtype = complex)
     return M
 
@@ -41,7 +40,8 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, c = kVal(E, approx_y, x)
     M = np.zeros((2,2))
-        
+    x=x*10**(-9)#passage en mettre
+    approx_y = approx_y*cst.e#passage en joule
     for i in range(n):
         Mi = Mx(K[n-i-1], c[n-i-1])
         if (i == 0):
@@ -50,18 +50,18 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
         else:
             M = np.linalg.inv(Mi)*M
 
-    return M, k1, x[0]
+    return M, k1, x_min
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de ceux-ci
-    Etest = np.linspace(-Eo, 0, 1000)
+    Etest = np.linspace(-Eo, -1.12264629e-21, 1000)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        Mt = (np.append(Mt, m[0][0]+m[0][1])/(1)) #critere de continuité, np.tan(k1*a)
+        Mt = (np.append(Mt, m[0][0]-cmath.exp(2*k1*a)*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
@@ -72,8 +72,8 @@ def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de c
 
 def q3():
     n = 1
-    Eo = 7*cst.e#passage en joule
-    sigma = 0.7*10**(-9)#passage en mettre
+    Eo = 7
+    sigma = 0.7
     
     return nbener(n, Eo, sigma)
 

@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from lennardJones import lennardJones
 from approximation import approx
+import scipy.constants as cst
 
 #PARAMETERS
 n = 1
-Eo = 0.45*1.602176565**(-19)
-sigma = 0.45*10**(-9)
+Eo = 0.45#passage en joule
+sigma = 0.47#passage en mettre
 
 #EXECUTION
 x_min, x_max = (0.4, 1.25)
