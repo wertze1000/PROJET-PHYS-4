@@ -10,7 +10,7 @@ Eo = 5 #eV
 sigma = 0.5 #nm
 
 #EXECUTION
-x_min, x_max = (sigma-10**-2, sigma*2.5)
+x_min, x_max = (sigma - 10**-2, 1.25)
 x = np.linspace(x_min, x_max, 1000)
 y = lennardJones(x, Eo, sigma)
 
