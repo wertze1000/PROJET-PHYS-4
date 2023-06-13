@@ -32,7 +32,7 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     
     #Well calculation
     while i < xmax:
-
+        print("ELIF COND", i-xmax, i+step, xmax)
         localArea = integrate.quad(f, tempMin, i)
         #print("i =", i, "tempMin", tempMin, "xmax", xmax, "localArea", localArea, "wellArea", wellArea, "wellNo", wellNb, "point", pointCount)
         
@@ -53,7 +53,7 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
             i = i+step
     
         #End of interval case
-        elif(np.abs(i - xmax) <= 10**-3):
+        elif(np.abs(i - xmax) <= step):
                 
                 j = tempMin + step
                 
@@ -68,9 +68,10 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
                 i = i + step
         pointCount += 1
 
+    #In case a point got lost
     if(totalPoint < 1000):
           approx.append(f(tempMin))
-          print("append needed :c")
+
     #reverse the initial offset
     return approx - np.abs(functionMinimum)
 
