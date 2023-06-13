@@ -32,7 +32,7 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     
     #Well calculation
     while i < xmax:
-        #print("ELIF COND", i-xmax, i+step, xmax)
+        # print("ELIF COND", i-xmax, i+step, xmax)
         localArea = integrate.quad(f, tempMin, i)
         #print("i =", i, "tempMin", tempMin, "xmax", xmax, "localArea", localArea, "wellArea", wellArea, "wellNo", wellNb, "point", pointCount)
         

@@ -35,10 +35,17 @@ ylin = y[:len(b)]
 idx = np.argwhere(np.diff(np.sign(ylin - b))).flatten()
 
 plt.plot(x[idx], y[idx], 'ro')
-print('$K_1$ = ', largeur**-1*y[idx[0]],'$k_1$ = ', largeur**-1*x[idx[0]] ,'$K_s$ = ', largeur**-1*y[idx[2]],'$k_2$ = ', largeur**-1*x[idx[2]])
+K1 = largeur**-1*y[idx[0]]
+k1 = largeur**-1*x[idx[0]]
+K2 = largeur**-1*y[idx[2]]
+k2 = largeur**-1*x[idx[2]]
+E1 = K1**2/(2*cst.electron_mass)*cst.hbar**2
+E2 = K2**2/(2*cst.electron_mass)*cst.hbar**2
+e1 = E1/cst.e
+e2 = E2/cst.e
 plt.plot(x, y)
 plt.plot(a, b, label = "$x^2 +y^2 = R^2$")
-plt.axhline(y = 0, label="-x cotan(x)")
+plt.axhline(y = 0, label="y = -x cotan(x)")
 plt.ylabel("y = $Kb$")
 plt.xlabel("x = kb")
 plt.ylim(top = 8, bottom = 0)

@@ -1,6 +1,7 @@
 from scipy.optimize import fsolve
 import time 
 from deternivener import nbener
+import numpy as np
 
 #PARAMETERS:
 Eo = 7      #eV
@@ -21,7 +22,7 @@ def T(n): #comparison of elapsed time to case n = 100
     return t(n)/t(100)
 
 def p(n): #function describing convergence (to optimize)
-    return 4*epsilon(n) + T(n)
+    return 4*np.abs(epsilon(n)) + np.abs(T(n))
 
 def optimization(p):
     nopt = fsolve(p)
