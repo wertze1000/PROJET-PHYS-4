@@ -6,11 +6,11 @@ import scipy.constants as cst
 
 #PARAMETERS
 n = 1
-Eo = 0.45#passage en joule
-sigma = 0.47#passage en metres
+Eo = 10 #eV
+sigma = 0.15 #nm
 
 #EXECUTION
-x_min, x_max = (0.4, 1.25)
+x_min, x_max = (sigma - 10**-2, 1)
 x = np.linspace(x_min, x_max, 1000)
 y = lennardJones(x, Eo, sigma)
 

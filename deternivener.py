@@ -40,7 +40,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, c = kVal(E, approx_y, x)
     M = np.zeros((2,2))
-    x=x*10**(-9)#passage en mettre
+    x=x*10**(-9)#passage en mètres
     approx_y = approx_y*cst.e#passage en joule
     for i in range(n):
         Mi = Mx(K[n-i-1], c[n-i-1])
@@ -53,7 +53,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     return M, k1, x_min
 
 
-def nbener(n, Eo, sigma): #calcul du nombre d'énergie lié et de la valeur de ceux-ci
+def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
     Etest = np.linspace(-Eo*10**(-9), -1.12264629e-21, 100)
     s = 0
     Mt = np.array([], dtype= complex)
