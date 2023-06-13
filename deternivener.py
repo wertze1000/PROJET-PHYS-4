@@ -64,7 +64,7 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        print( -np.tan(k1*a)**-1*m[0][1])
+        #print( -np.tan(k1*a)**-1*m[0][1])
         Mt = (np.append(Mt,m[0][0]-np.tan(k1*a)**-1*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
