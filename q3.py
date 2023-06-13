@@ -35,13 +35,11 @@ ylin = y[:len(b)]
 idx = np.argwhere(np.diff(np.sign(ylin - b))).flatten()
 
 plt.plot(x[idx], y[idx], 'ro')
-print(x[idx[0]],y[idx[0]] )
-print(x[idx[2]],y[idx[2]])
-
+print('$K_1$ = ', largeur**-1*y[idx[0]],'$k_1$ = ', largeur**-1*x[idx[0]] ,'$K_s$ = ', largeur**-1*y[idx[2]],'$k_2$ = ', largeur**-1*x[idx[2]])
 plt.plot(x, y)
 plt.plot(a, b, label = "$x^2 +y^2 = R^2$")
 plt.axhline(y = 0, label="-x cotan(x)")
-plt.ylabel("y = $K_2b$")
+plt.ylabel("y = $Kb$")
 plt.xlabel("x = kb")
 plt.ylim(top = 8, bottom = 0)
 plt.xlim(left = 0, right = 8)

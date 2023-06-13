@@ -70,7 +70,7 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
 
     if(totalPoint < 1000):
           approx.append(f(tempMin))
-          print("append needed :c")
+          #print("append needed :c")
     #reverse the initial offset
     return approx - np.abs(functionMinimum)
 
