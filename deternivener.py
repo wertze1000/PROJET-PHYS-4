@@ -35,7 +35,7 @@ def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
     return M
 
 def M(n, E, Eo, sigma):#calcule de la matrice M finale
-    x_min, x_max = (0.4, 1.25)
+    x_min, x_max = (sigma-10**-2, sigma*2.5)
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, c = kVal(E, approx_y, x)

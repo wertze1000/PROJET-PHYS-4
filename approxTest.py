@@ -17,7 +17,7 @@ y = lennardJones(x, Eo, sigma)
 #PLOT
 plt.plot(x, y, color = "green",label = "Potentiel de Lennard-Jones")
 plt.plot(x, approx(lennardJones, x_min, x_max, 1, Eo, sigma), color = "blue", linestyle = "dotted", label = "ordre 1")
-plt.plot(x, approx(lennardJones, x_min, x_max, 10, Eo, sigma), color = "red", linestyle = "dashed", label = "ordre 10")
+#plt.plot(x, approx(lennardJones, x_min, x_max, 10, Eo, sigma), color = "red", linestyle = "dashed", label = "ordre 10")
 
 plt.axhline(y = 0, color = 'black')
 
