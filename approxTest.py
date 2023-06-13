@@ -7,7 +7,7 @@ import scipy.constants as cst
 #PARAMETERS
 n = 1
 Eo = 0.45#passage en joule
-sigma = 0.47#passage en mettre
+sigma = 0.47#passage en metres
 
 #EXECUTION
 x_min, x_max = (0.4, 1.25)
