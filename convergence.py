@@ -28,11 +28,6 @@ def P(n, E100, tE100):
     t = tn / tE100
     return 4*epsilon + t
 
-def optimization(p):
-    nopt = fsolve(p)
-    return nopt
-
-#test:
 nRange = range(1,100,1)
 Plist = []
 

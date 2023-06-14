@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import scipy.constants as cst
 import math as m
 
- 
-largeur =0.4754754754755084*10**-9#pris dans fonction approx avec un print [m]
+#Résolution analytique
+
+largeur =0.4754754754755084*10**-9 #pris dans fonction approx avec un print [m]
 e0 = 5 #[eV]
 
 r = np.sqrt(2*cst.electron_mass*e0*cst.e*largeur**2/cst.hbar**2)
