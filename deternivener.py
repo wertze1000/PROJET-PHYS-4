@@ -67,7 +67,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
 
 
 def nbEner(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
-    Etest = np.linspace(-Eo*cst.e, -1e-22, 10)
+    Etest = np.linspace(-Eo*cst.e, -1e-22, 100)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
@@ -79,11 +79,11 @@ def nbEner(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         i+=1
     e = Etest[argrelextrema((Mt), np.less)[0]]
     s = len(e)
-    #plt.plot(Etest/cst.e, Mt)
+    plt.plot(Etest/cst.e, Mt)
     #plt.ylim(top = 1, bottom = -0.5)
-    #plt.show()
+    plt.show()
     
-    return s, e
+    return s, (e/cst.e)
 
 def q3():
     n = 1
@@ -122,5 +122,5 @@ def q4():
     print(soln)
     #reponse sous plot(brouillon), heat map une n et autre e
     
-#print(q3())
-q4()
+print(q3())
+#q4()
