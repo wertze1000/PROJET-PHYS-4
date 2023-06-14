@@ -3,6 +3,7 @@ import numpy as np
 from approximation import approx
 from lennardJones import lennardJones
 from scipy.signal import argrelextrema
+from heatMap import generate_heatmap
 import scipy.constants as cst
 import cmath
 import matplotlib.pyplot as plt
@@ -33,6 +34,7 @@ def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
     k = np.sqrt(k_square)
     b = b*10**(-9)
     M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(-k*b)]], dtype = complex)
+    #print(M)
     return M
 
 def M(n, E, Eo, sigma):#calcule de la matrice M finale
@@ -44,11 +46,12 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     #print(x)
     #x=x*10**(-9)#passage en mètres
     approx_y = approx_y*cst.e#passage en joule
+    k1 = K[0]
     for i in range(n+1):
         #print(i, n,K[n-i-1], c[n-i-1])
-        Mi = Mx(K[n-i-1], b[n-i-1])
+        Mi = Mx(K[n-i], b[n-i])
+        #print(Mi)
         if (i == 0):
-            k1 = K[i]
             M = Mi
         else:
             M = np.linalg.inv(Mi)*M
@@ -64,8 +67,8 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        #print( -np.tan(k1*a)**-1*m[0][1])
-        Mt = (np.append(Mt,m[0][0]-np.tan(k1*a)**-1*m[0][1])) #critere de continuité, np.tan(k1*a)
+        #print( m[0][0], np.tan(k1*a*10**(-9))*m[0][1])
+        Mt = (np.append(Mt,m[0][0]+np.tan(k1*a*10**(-9))*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
@@ -99,6 +102,9 @@ def q4():
             a+=1
         b+=1
     
+    generate_heatmap(E0, sigma, sole)
+    generate_heatmap(E0, sigma, soln)
+
     #reponse sous plot(brouillon), heat map une n et autre e
     
 print(q3())
