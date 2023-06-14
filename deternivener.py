@@ -39,7 +39,7 @@ def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
     return M
 
 def M(n, E, Eo, sigma):#calcule de la matrice M finale
-    x_min, x_max = (sigma-10**-2, sigma*2.5)
+    x_min, x_max = (sigma-10**-2, sigma*5)
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, b = kVal(E, approx_y, x)
@@ -70,8 +70,8 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         m, k1, a = M(n, e, Eo, sigma)
         k1 = np.sqrt(k1)
         a = a *10**(-9)
-        print(k1*a, k1, a, m)
-        Mt = (np.append(Mt,np.cos(k1*a)*m[0][1]+np.sin(k1*a)*m[1][1])) #critere de continuité, np.tan(k1*a)
+        #print(k1*a, k1, a, m)
+        Mt = (np.append(Mt,-np.cos(k1*a)*m[0][1]+np.sin(k1*a)*m[1][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
