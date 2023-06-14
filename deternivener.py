@@ -9,7 +9,7 @@ import cmath
 import matplotlib.pyplot as plt
 
 #Retourne le K**2 associé à chaque puits, et une matrice B contenant sa position (x)
-def kVal(E, approx_y, x):
+def kVal(E, approx_y, x, n):
     m = cst.electron_mass
     
     #print(222, approx_y)
@@ -29,6 +29,12 @@ def kVal(E, approx_y, x):
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
+    
+    while(j < n+1): #Dans le cas ou les derniers puits sont négligeables (n > 50)
+        B = np.append(B, B[len(B)-1])
+        kSquared = np.append(kSquared, kCurrent)
+        j += 1
+    
     kCurrent = (2*m*(-E + E0[-1]*cst.e) )/ (cst.hbar**2)
     kSquared = np.append(kSquared, kCurrent)
     #print(B, kSquared, 111)
@@ -45,7 +51,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     x_min, x_max = (sigma-10**-2, sigma*5)
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
-    K, b = kVal(E, approx_y, x)
+    K, b = kVal(E, approx_y, x, n)
     M = np.identity(2, dtype = complex)
     #print(x)
     #x=x*10**(-9)#passage en mètres
@@ -62,7 +68,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     return M, k1, x_min
 
 
-def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
+def nbEner(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
     Etest = np.linspace(-Eo*cst.e, 0, 100)
     s = 0
     Mt = np.array([], dtype= complex)
@@ -71,22 +77,23 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         #print(i)
         m, k1, a = M(n, e, Eo, sigma)
         #print( -np.tan(k1*a)**-1*m[0][1])
-        Mt = (np.append(Mt,m[0][0]-np.tan(k1*a)**-1*m[0][1])) #critere de continuité, np.tan(k1*a)
+        Mt = (np.append(Mt,m[0][0] - np.tan(k1*a)**-1*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
-    s = len(e)
-    plt.plot(Etest/cst.e, Mt)
+    nombreEnergies = len(e)
+    Energies = -e/cst.e
+    #plt.plot(Etest/cst.e, Mt)
     #plt.ylim(top = 1, bottom = -0.5)
-    plt.show()
+    #plt.show()
     
-    return s, (-e/cst.e)
+    return nombreEnergies, Energies
 
 def q3():
-    n = 1
+    n = 100
     Eo = 10
     sigma = 1
     
-    return nbener(n, Eo, sigma)
+    return nbEner(n, Eo, sigma)
 
 def q4():
     n = 1
@@ -102,7 +109,7 @@ def q4():
     for i in sigma:
         for j in E0:
             print(j)
-            s, e = nbener(n, i, j) #plus bas e
+            s, e = nbEner(n, i, j) #plus bas e
             soln[a] [b] = s
             sole[a] [b] = np.min(e)
             a+=1
@@ -115,5 +122,5 @@ def q4():
     print(soln)
     #reponse sous plot(brouillon), heat map une n et autre e
     
-print(q3())
+#print(q3())
 #q4()
