@@ -43,19 +43,18 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
     K, b = kVal(E, approx_y, x)
-    M = np.zeros((2,2))
+    M = np.identity(2, dtype = complex)
     #print(x)
     #x=x*10**(-9)#passage en mètres
-    approx_y = approx_y*cst.e#passage en joule
+    #approx_y = approx_y*cst.e#passage en joule
     k1 = K[0]
-    for i in range(n+1):
-        #print(i, n,K[n-i-1], c[n-i-1])
-        Mi = Mx(K[n-i], b[n-i])
+    for i in range(n):
+        #print(i, n,K, b)
+        Mi1 = Mx(K[i], b[i+1])
+        Mi2 = Mx(K[i+1], b[i+1])
         #print(b[n-i])
-        if (i == 0):
-            M = Mi
-        else:
-            M = np.linalg.inv(Mi)*M
+        M = np.matmul(Mi1,M)
+        M = np.matmul(np.linalg.inv(Mi2),M)
 
     return M, k1, x_min
 
@@ -71,12 +70,13 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         k1 = np.sqrt(k1)
         a = a *10**(-9)
         #print(k1*a, k1, a, m)
-        Mt = (np.append(Mt,-np.cos(k1*a)*m[0][1]+np.sin(k1*a)*m[1][1])) #critere de continuité, np.tan(k1*a)
+        Mt = (np.append(Mt,-np.sin(k1*a)*m[0][0]+np.cos(k1*a)*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
-    plt.plot(Etest/cst.e, Mt)
-    plt.show()
+    #plt.plot(Etest/cst.e, Mt)
+    #plt.ylim(top = 1, bottom = -10)
+    #plt.show()
     
     return s, (-e/cst.e)
 
@@ -91,23 +91,28 @@ def q4():
     n = 1
     sigma = np.arange(0.1, 1.05, 0.05)#en nm
     E0 = np.arange(1, 10.5, 0.5)#en ev
-    sigma = sigma*10**(-9)#en m
-    E0 = E0*cst.e#en j
+     #sigma = sigma*10**(-9)#en m
+    #E0 = E0*cst.e#en j
     soln = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
     sole = np.zeros((len(sigma), len(E0)))#matrice taille (i,j)
-    a = b = 0
+    a = 0
+    b = 0
 
     for i in sigma:
         for j in E0:
+            #print(i, j, n)
             s, e = nbener(n, i, j) #plus bas e
-            soln[b] [a] = s
-            sole[b] [a] = np.min(e)
+            soln[a] [b] = s
+            sole[a] [b] = np.min(e)
             a+=1
         b+=1
+        a = 0
     
     generate_heatmap(E0, sigma, sole)
     generate_heatmap(E0, sigma, soln)
 
+    print(soln)
     #reponse sous plot(brouillon), heat map une n et autre e
     
-print(q3())
+#print(q3())
+q4()
