@@ -24,7 +24,7 @@ def kVal(E, approx_y, x):
     for i in range(len(approx_y) - 1):
         if approx_y[i] != approx_y[i+1]:
             E0 = np.append(E0, approx_y[i+1])
-            print(E0[j-1])
+            #print(E0[j-1])
             kCurrent = (2*m*(E - E0[j-1]*cst.e) )/ (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
@@ -51,7 +51,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     for i in range(n+1):
         #print(i, n,K[n-i-1], c[n-i-1])
         Mi = Mx(K[n-i], b[n-i])
-        #print(Mi)
+        #print(b[n-i])
         if (i == 0):
             M = Mi
         else:
@@ -68,8 +68,10 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     for e in Etest:
         print(i)
         m, k1, a = M(n, e, Eo, sigma)
-        #print( m[0][0], np.tan(k1*a*10**(-9))*m[0][1])
-        Mt = (np.append(Mt,-m[0][0]-np.tan(k1*a*10**(-9))*m[0][1])) #critere de continuité, np.tan(k1*a)
+        k1 = np.sqrt(k1)
+        a = a *10**(-9)
+        print(k1*a, k1, a, m)
+        Mt = (np.append(Mt,np.cos(k1*a)*m[0][1]+np.sin(k1*a)*m[1][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
