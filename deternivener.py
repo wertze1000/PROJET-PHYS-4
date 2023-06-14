@@ -25,11 +25,11 @@ def kVal(E, approx_y, x):
     for i in range(len(approx_y) - 1):
         if approx_y[i] != approx_y[i+1]:
             E0 = np.append(E0, approx_y[i+1])
-            kCurrent = (2*m*(-E + E0[j-1]*cst.e) )/ (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
+            kCurrent = (2*m*(E - E0[j-1]*cst.e) )/ (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
-    kCurrent = (2*m*(-E + E0[-1]*cst.e) )/ (cst.hbar**2)
+    kCurrent = (2*m*E)/ (cst.hbar**2)
     kSquared = np.append(kSquared, kCurrent)
     #print(B, kSquared, 111)
     return kSquared, B
@@ -52,18 +52,17 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     #approx_y = approx_y*cst.e#passage en joule
     k1 = K[0]
     for i in range(n):
-        #print(i, n,K, b)
         Mi1 = Mx(K[i], b[i+1])
         Mi2 = Mx(K[i+1], b[i+1])
         #print(b[n-i])
+        M = np.matmul(Mi1, M)
+        M = np.matmul(np.linalg.inv(Mi2), M)
         
-        M = np.matmul(M,np.linalg.inv(Mi1))
-        M = np.matmul(M,Mi2)
     return M, k1, x_min
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
-    Etest = np.linspace(-Eo*cst.e, 0, 100)
+    Etest = np.linspace(-Eo*cst.e, -1e-22, 10)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
@@ -71,20 +70,20 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         #print(i)
         m, k1, a = M(n, e, Eo, sigma)
         #print( -np.tan(k1*a)**-1*m[0][1])
-        Mt = (np.append(Mt,m[0][0]-np.tan(k1*a)**-1*m[0][1])) #critere de continuité, np.tan(k1*a)
+        Mt = (np.append(Mt,np.tan(k1*a)*m[0][0]-m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
-    e = Etest[argrelextrema(Mt, np.less)[0]]
+    e = Etest[argrelextrema((Mt), np.less)[0]]
     s = len(e)
-    plt.plot(Etest/cst.e, Mt)
+    #plt.plot(Etest/cst.e, Mt)
     #plt.ylim(top = 1, bottom = -0.5)
-    plt.show()
+    #plt.show()
     
     return s, (-e/cst.e)
 
 def q3():
     n = 1
-    Eo = 10
-    sigma = 1
+    Eo = 5
+    sigma = 0.5
     
     return nbener(n, Eo, sigma)
 
@@ -104,7 +103,10 @@ def q4():
             print(j)
             s, e = nbener(n, i, j) #plus bas e
             soln[a] [b] = s
-            sole[a] [b] = np.min(e)
+            if(len(e) == 0):
+                sole[a] [b] =0
+            else:
+                sole[a] [b] = np.min(-e)
             a+=1
         b+=1
         a = 0
@@ -115,5 +117,5 @@ def q4():
     print(soln)
     #reponse sous plot(brouillon), heat map une n et autre e
     
-print(q3())
-#q4()
+#print(q3())
+q4()
