@@ -13,22 +13,25 @@ def kVal(E, approx_y, x):
     m = cst.electron_mass
     
     #print(222, approx_y)
-    
     E0 = np.array([])
+    approx_y[0]=approx_y[1]
     E0 = np.append(E0, approx_y[0])             #Potentiel minimum dans la région courante
     kSquared = np.array([], dtype = complex)    #Matrice des K carrés
     B = np.array([])                            #position de début / fin de puits (x)
-    
+    B = np.append(B, x[0])
+
     j = 1                                       #Nombre du puits (ou nombre du E0)
     
     for i in range(len(approx_y) - 1):
         if approx_y[i] != approx_y[i+1]:
             E0 = np.append(E0, approx_y[i+1])
-            #print(E0[j-1])
-            kCurrent = (2*m*(E - E0[j-1]*cst.e) )/ (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
+            kCurrent = (2*m*(-E + E0[j-1]*cst.e) )/ (cst.hbar**2) #Calcul du coefficient K**2 par sa définition
             j += 1
             kSquared = np.append(kSquared, kCurrent)
             B = np.append(B, x[i])
+    kCurrent = (2*m*(-E + E0[-1]*cst.e) )/ (cst.hbar**2)
+    kSquared = np.append(kSquared, kCurrent)
+    #print(B, kSquared, 111)
     return kSquared, B
 
 def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
@@ -53,14 +56,14 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
         Mi1 = Mx(K[i], b[i+1])
         Mi2 = Mx(K[i+1], b[i+1])
         #print(b[n-i])
-        M = np.matmul(Mi1,M)
-        M = np.matmul(np.linalg.inv(Mi2),M)
-
+        
+        M = np.matmul(M,np.linalg.inv(Mi1))
+        M = np.matmul(M,Mi2)
     return M, k1, x_min
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
-    Etest = np.linspace(-Eo*cst.e, 0, 100)
+    Etest = np.linspace(-Eo*cst.e, 0, 1000)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
@@ -69,21 +72,21 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         m, k1, a = M(n, e, Eo, sigma)
         k1 = np.sqrt(k1)
         a = a *10**(-9)
-        #print(k1*a, k1, a, m)
-        Mt = (np.append(Mt,-np.sin(k1*a)*m[0][0]+np.cos(k1*a)*m[0][1])) #critere de continuité, np.tan(k1*a)
+        #print( k1, a, m)
+        Mt = (np.append(Mt,cmath.sin(k1*a)*m[1][1]+cmath.cos(k1*a)*m[0][1])) #critere de continuité, np.tan(k1*a)
         i+=1
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
-    #plt.plot(Etest/cst.e, Mt)
-    #plt.ylim(top = 1, bottom = -10)
-    #plt.show()
+    plt.plot(Etest/cst.e, Mt)
+    plt.ylim(top = 1, bottom = -0.5)
+    plt.show()
     
     return s, (-e/cst.e)
 
 def q3():
     n = 1
-    Eo = 5
-    sigma = 0.5
+    Eo = 4
+    sigma = 0.4
     
     return nbener(n, Eo, sigma)
 
@@ -114,5 +117,5 @@ def q4():
     print(soln)
     #reponse sous plot(brouillon), heat map une n et autre e
     
-#print(q3())
-q4()
+print(q3())
+#q4()
