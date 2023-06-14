@@ -38,7 +38,7 @@ def kVal(E, approx_y, x, n):
     #print(B, kSquared, 111)
     return kSquared, B
 
-def Mx(k_square, b):# calcul de une matrice Mi, avec un K donnée
+def Mx(k_square, b):    #calcul de une matrice Mi, avec un K donnée
     k = np.sqrt(k_square)
     b = b*10**(-9)
     M = np.array([[cmath.exp(k*b), cmath.exp(-k*b)],[k*cmath.exp(k*b), -k*cmath.exp(-k*b)]], dtype = complex)
@@ -63,7 +63,7 @@ def M(n, E, Eo, sigma): #calcul de la matrice M finale
     return M, k1, x_min
 
 
-def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
+def nbEner(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
     Etest = np.linspace(-Eo*cst.e, -1e-22, 10)
     s = 0
     Mt = np.array([], dtype= complex)
@@ -76,11 +76,15 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
         i+=1
     e = Etest[argrelextrema((Mt), np.less)[0]]
     s = len(e)
+
+    nombreEnergies = s
+    Energies = e/cst.e
+    
     #plt.plot(Etest/cst.e, Mt)
     #plt.ylim(top = 1, bottom = -0.5)
     #plt.show()
     
-    return s, (e/cst.e)
+    return nombreEnergies, Energies
 
 def q3():
     n = 1
@@ -117,5 +121,5 @@ def q4():
 
     print(soln)
     
-#print(q3())
-q4()
+#q3()
+#q4()
