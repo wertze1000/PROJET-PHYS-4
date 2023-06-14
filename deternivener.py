@@ -31,6 +31,11 @@ def kVal(E, approx_y, x, n):
             B = np.append(B, x[i])
     kCurrent = (2*m*E)/ (cst.hbar**2)
     kSquared = np.append(kSquared, kCurrent)
+    while(j < n+1): #Dans le cas ou les derniers puits sont négligeables (n > 50)
+        B = np.append(B, B[len(B)-1])
+        kSquared = np.append(kSquared, kCurrent)
+        j += 1
+    
     #print(B, kSquared, 111)
     return kSquared, B
 
@@ -61,7 +66,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     return M, k1, x_min
 
 
-def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
+def nbEner(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
     Etest = np.linspace(-Eo*cst.e, -1e-22, 10)
     s = 0
     Mt = np.array([], dtype= complex)
@@ -78,7 +83,7 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     #plt.ylim(top = 1, bottom = -0.5)
     #plt.show()
     
-    return nombreEnergies, Energies
+    return s, e
 
 def q3():
     n = 1
