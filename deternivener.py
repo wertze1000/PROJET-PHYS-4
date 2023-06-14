@@ -63,12 +63,12 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
 
 
 def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'énergie de ceux-ci
-    Etest = np.linspace(-Eo*cst.e, 0, 1000)
+    Etest = np.linspace(-Eo*cst.e, 0, 100)
     s = 0
     Mt = np.array([], dtype= complex)
     i=0
     for e in Etest:
-        print(i)
+        #print(i)
         m, k1, a = M(n, e, Eo, sigma)
         k1 = np.sqrt(k1)
         a = a *10**(-9)
@@ -78,15 +78,15 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     e = Etest[argrelextrema(Mt, np.less)[0]]
     s = len(e)
     plt.plot(Etest/cst.e, Mt)
-    plt.ylim(top = 1, bottom = -0.5)
+    #plt.ylim(top = 1, bottom = -0.5)
     plt.show()
     
     return s, (-e/cst.e)
 
 def q3():
     n = 1
-    Eo = 4
-    sigma = 0.4
+    Eo = 10
+    sigma = 1
     
     return nbener(n, Eo, sigma)
 
@@ -103,7 +103,7 @@ def q4():
 
     for i in sigma:
         for j in E0:
-            #print(i, j, n)
+            print(j)
             s, e = nbener(n, i, j) #plus bas e
             soln[a] [b] = s
             sole[a] [b] = np.min(e)
