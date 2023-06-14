@@ -9,7 +9,7 @@ import cmath
 import matplotlib.pyplot as plt
 
 #Retourne le K**2 associé à chaque puits, et une matrice B contenant sa position (x)
-def kVal(E, approx_y, x):
+def kVal(E, approx_y, x, n):
     m = cst.electron_mass
     
     #print(222, approx_y)
@@ -45,7 +45,7 @@ def M(n, E, Eo, sigma):#calcule de la matrice M finale
     x_min, x_max = (sigma-10**-2, sigma*5)
     x = np.linspace(x_min, x_max, 1000)
     approx_y = approx(lennardJones, x_min, x_max, n, Eo, sigma)
-    K, b = kVal(E, approx_y, x)
+    K, b = kVal(E, approx_y, x, n)
     M = np.identity(2, dtype = complex)
     #print(x)
     #x=x*10**(-9)#passage en mètres
@@ -78,14 +78,14 @@ def nbener(n, Eo, sigma): #calcul du nombre d'états liés et de la valeur d'én
     #plt.ylim(top = 1, bottom = -0.5)
     #plt.show()
     
-    return s, (-e/cst.e)
+    return nombreEnergies, Energies
 
 def q3():
     n = 1
     Eo = 5
     sigma = 0.5
     
-    return nbener(n, Eo, sigma)
+    return nbEner(n, Eo, sigma)
 
 def q4():
     n = 1
@@ -101,7 +101,7 @@ def q4():
     for i in sigma:
         for j in E0:
             print(j)
-            s, e = nbener(n, i, j) #plus bas e
+            s, e = nbEner(n, i, j) #plus bas e
             soln[a] [b] = s
             if(len(e) == 0):
                 sole[a] [b] =0

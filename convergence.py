@@ -1,29 +1,45 @@
 from scipy.optimize import fsolve
 import time 
-from deternivener import nbener
+from deternivener import nbEner
 import numpy as np
+import matplotlib.pyplot as plt
 
 #PARAMETERS:
 Eo = 7      #eV
 sigma = 0.7 #nm
 
+#Premier niveau d'énergie(pour Eo = 7, sigma = 0,7)
+start = time.time()
+E100 = min(nbEner(100,Eo,sigma)[1]) #[eV]
+end = time.time()
+
+tE100 = end - start
+print("Pour n=100", E100, "time", tE100, "s")
+
 #FUNCTIONS:
-def epsilon(E1, n): #RELATIVE ERROR TO FIRST ALLOWED ENERGY LEVEL
-    return (E1(n) - E1(100))/E1(100)
-
-def t(n): #elapsed time for execution of nbener (Schrödinger 1D) for a given n
+def P(n, E100, tE100): 
     start = time.time()
-    nbener(n, Eo, sigma) #function deternivener for given n
+    EN = min(nbEner(n,Eo,sigma)[1])
     end = time.time()
+    tn = end - start
 
-    return end - start 
-
-def T(n): #comparison of elapsed time to case n = 100
-    return t(n)/t(100)
-
-def p(n): #function describing convergence (to optimize)
-    return 4*np.abs(epsilon(n)) + np.abs(T(n))
+    print("Pour n=",n,EN, "time", tn, "s")
+    epsilon = (EN - E100)/E100
+    t = tn / tE100
+    return 4*epsilon + t
 
 def optimization(p):
     nopt = fsolve(p)
     return nopt
+
+#test:
+nRange = range(1,100,1)
+Plist = []
+
+for i in nRange:
+    Plist.append(P(i,E100, tE100))
+    
+plt.plot(nRange, Plist)
+plt.ylabel("P(n)")
+plt.xlabel("n")
+plt.show()
