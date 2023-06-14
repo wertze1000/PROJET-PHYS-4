@@ -29,7 +29,7 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
     approx.append(f(xmin))
     
     totalPoint = 1
-    
+
     #Well calculation
     while i < xmax:
         # print("ELIF COND", i-xmax, i+step, xmax)
@@ -38,19 +38,19 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
         
         if(np.abs(localArea[0]) >= np.abs(wellArea)):
             #print("localArea = ", localArea[0],">= wellArea =",wellArea, "for x range:(", xmin, ";", i, ")",i -xmin)
+            
             j = tempMin
             localInterval = np.arange(j,i,step)
             localMin = min(f(localInterval))
             
             while j < i:
                     totalPoint += 1
-                    #print("append " ,i, "f:", localMin, "POINTCOUNT" ,totalPoint)
                     approx.append(localMin)
-                    j = j+step
+                    j = j + step
             tempMin = i
             wellNb += 1
             
-            i = i+step
+            i = i + step
     
         #End of interval case
         elif(np.abs(i - xmax) <= step):
@@ -62,16 +62,16 @@ def approx(arbitraryFunction, xmin, xmax, nWells, Eo, sigma):
                     #print("append (ELIF)", j, "f:", f(tempMin), "POINTCOUNT" ,totalPoint)
                     approx.append(f(tempMin))
                     j = j+step
-                
+                wellNb += 1
                 break
         else:
                 i = i + step
         pointCount += 1
-
+    
     #In case a point got lost
     if(totalPoint < 1000):
           approx.append(f(tempMin))
-          #print("append needed :c")
+          
     #reverse the initial offset
     return approx - np.abs(functionMinimum)
 
